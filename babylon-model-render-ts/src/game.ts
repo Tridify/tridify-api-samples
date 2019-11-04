@@ -2,17 +2,17 @@ import {
   Engine,
   Scene,
   SceneLoader,
-} from 'babylonjs';
-import 'babylonjs-loaders';
-import 'babylonjs-materials';
+  ArcRotateCamera,
+} from '@babylonjs/core';
 
-import { loadModel } from './modelUtil'
+import * as Utilities from '@tridify/babylonjs-utilities';
 
 export default class Game {
   // Public members
   public engine: Engine;
   public canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('renderCanvas');
   public scene: Scene = null;
+  public camera: ArcRotateCamera = null;
 
   // Private members
   private _tridifyIfcUID: string;
@@ -51,13 +51,18 @@ export default class Game {
       this.scene = scene;
 
       // Load model
-      await loadModel(scene, this._tridifyIfcUID)
+      await Utilities.loadModel(scene, this._tridifyIfcUID);
 
       // Create environment
-      this.createEnvironment(scene)
+      this.createEnvironment(scene);
 
       // Attach camera
+      this.camera = Utilities.createOrbitCamera(this.scene);
+      this.scene.activeCamera = this.camera;
       this.scene.activeCamera.attachControl(this.canvas, true);
+
+      // Frame scene so that models are properly in view
+      Utilities.frameScene(this.scene, this.camera);
 
       // Run render loop
       this.engine.runRenderLoop(() => {

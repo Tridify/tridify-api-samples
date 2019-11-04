@@ -1,11 +1,9 @@
 import {
   Engine,
   SceneLoader,
-} from 'babylonjs';
-import 'babylonjs-loaders';
-import 'babylonjs-materials';
+} from '@babylonjs/core';
 
-import { loadModel } from './modelUtil'
+import * as Utilities from '@tridify/babylonjs-utilities';
 
 const createEnvironment = (scene) => {
   scene.createDefaultEnvironment({
@@ -21,6 +19,7 @@ export default class Game {
   constructor() {
     this.canvas = document.getElementById('renderCanvas');
     this.scene = null;
+    this.camera = null;
 
     // Create engine
     this.engine = new Engine(this.canvas, true, {
@@ -40,13 +39,18 @@ export default class Game {
       this.scene = scene;
 
       // Load model
-      await loadModel(scene, this.conversionID)
+      await Utilities.loadModel(scene, this.conversionID);
 
       // Create environment
       createEnvironment(scene)
 
       // Attach camera
+      this.camera = Utilities.createOrbitCamera(this.scene);
+      this.scene.activeCamera = this.camera;
       this.scene.activeCamera.attachControl(this.canvas, true);
+
+      // Frame scene so that models are properly in view
+      Utilities.frameScene(this.scene, this.camera);
 
       // Run render loop
       this.engine.runRenderLoop(() => {

@@ -5,9 +5,9 @@ import {
   PBRMaterial,
   AbstractMesh,
   Mesh,
-} from 'babylonjs';
+} from '@babylonjs/core';
 
-import 'babylonjs-loaders';
+import "@babylonjs/loaders/glTF"
 
 export async function loadModel(scene: Scene, uid: string) {
   const myUrls = await fetchGltfUrls(uid);
@@ -32,7 +32,7 @@ async function applyPbrMaterials(scene: Scene, meshes: Array<AbstractMesh>) {
       if(mesh.material instanceof PBRMaterial) {
         pbr.albedoColor = mesh.material.albedoColor;
         pbr.useAlphaFromAlbedoTexture = true;
-        pbr.metallic = 0.5;
+        pbr.metallic = 0;
       }
 
       if(mesh instanceof Mesh) {
