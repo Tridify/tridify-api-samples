@@ -17,7 +17,7 @@
   "dependencies": {
     "@babylonjs/core": "^4.0.3",
     "@babylonjs/loaders": "^4.0.3",
-    "@tridify/babylonjs-utilities": "^0.0.132"
+    "@tridify/babylonjs-utilities": "^0.0.15"
   },
   "staticFiles": {
     "staticPath": [
