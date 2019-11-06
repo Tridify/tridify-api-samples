@@ -8,7 +8,6 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/javascript-astar": "~0.0.29",
     "@types/systemjs": "0.20.6",
     "awesome-typescript-loader": "^5.2.1",
     "copy-webpack-plugin": "^5.0.3",
@@ -19,12 +18,9 @@
     "webpack-dev-server": "^3.7.1"
   },
   "dependencies": {
-    "babylonjs": "4.0.3",
-    "babylonjs-gui": "4.0.3",
-    "babylonjs-loaders": "4.0.3",
-    "babylonjs-materials": "4.0.3",
-    "babylonjs-procedural-textures": "4.0.3",
-    "babylonjs-editor": "3.1.1"
+    "@babylonjs/core": "^4.0.3",
+    "@babylonjs/loaders": "^4.0.3",
+    "@tridify/babylonjs-utilities": "^0.0.16"
   },
   "staticFiles": {
     "staticPath": [
