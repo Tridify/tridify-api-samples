@@ -1,6 +1,6 @@
 # tridify-api-samples
 
-Tridify API samples for drawing IFC files in BabylonJS
+Tridify API samples for drawing IFC files with [BabylonJS](https://www.babylonjs.com/).
 
 ## Usage
 
