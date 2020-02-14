@@ -8,6 +8,7 @@ import {
   import * as Utilities from '@tridify/babylonjs-utilities';
 
   const run = async () => {
+    
 
     const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('renderCanvas');
 
@@ -18,6 +19,9 @@ import {
 
     // Minimal hash routing. Use the hash from conversion service to open different models.
     const conversionID: string = document.location.hash ? window.location.hash.replace("#", "") : null;
+
+    // This load Ifc data of the model, you can also use it to get parts you like. loadIfc(conversionID, "decomposition")
+    const ifcData = await Utilities.loadIfc(conversionID);
 
     // Events
     window.addEventListener('resize', () => engine.resize());
