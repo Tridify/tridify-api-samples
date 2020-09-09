@@ -20,9 +20,6 @@ import {
     // Minimal hash routing. Use the hash from conversion service to open different models.
     const conversionID = document.location.hash ? window.location.hash.replace("#", "") : null;
 
-    // This load Ifc data of the model, you can also use it to get parts you like. loadIfc(conversionID, "decomposition")
-    const ifcData = await Utilities.loadIfc(conversionID);
-
     // Events
     window.addEventListener('resize', () => engine.resize());
 
@@ -30,7 +27,10 @@ import {
     await SceneLoader.LoadAsync('./scene/', 'scene.babylon', engine).then(async (scene) => {
 
       // Load model
-      await Utilities.loadModel(scene, conversionID);
+      const hashes = await loadModel(scene, conversionID);
+      
+      // This load Ifc data of the model, you can also use it to get parts you like. loadIfc(conversionID, "decomposition")
+      const ifcData = await loadIfc(hashes);
 
       // Create environment
       scene.createDefaultEnvironment({
