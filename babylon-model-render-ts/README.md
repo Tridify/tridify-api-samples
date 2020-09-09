@@ -19,7 +19,7 @@ npm run dev
 npm run build
 ```
 
-And access http://localhost:1338/index.html#MODELHASH
+And access http://localhost:8080/index.html#MODELHASH
 
 You can get the model hash by publishing a converted model from [Tridify Convert web service](https://convert.tridify.com)
 
