@@ -15,8 +15,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html'
     }),
-    new CopyPlugin([
+    new CopyPlugin({patterns: [
         { from: 'scene', to: 'scene' }
-      ]),
+      ],
+    }),
   ]
 }
