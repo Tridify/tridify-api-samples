@@ -21,7 +21,7 @@ import {
     const conversionID: string = document.location.hash ? window.location.hash.replace("#", "") : null;
 
     // This load Ifc data of the model, you can also use it to get parts you like. loadIfc(conversionID, "decomposition")
-    const ifcData = await Utilities.loadIfc(conversionID);
+    
 
     // Events
     window.addEventListener('resize', () => engine.resize());
@@ -30,7 +30,10 @@ import {
     await SceneLoader.LoadAsync('./scene/', 'scene.babylon', engine).then(async (scene: Scene) => {
 
       // Load model
-      await Utilities.loadModel(scene, conversionID);
+      const hashes : string[] = await Utilities.loadModel(scene, conversionID);
+
+      // This load Ifc data of the model, you can also use it to get parts you like. loadIfc(conversionID, "decomposition")
+      const ifcData = await Utilities.loadIfc(hashes);
 
       // Create environment
       scene.createDefaultEnvironment({
