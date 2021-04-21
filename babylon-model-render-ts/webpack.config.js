@@ -1,11 +1,13 @@
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
+const fs = require("fs");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const appDirectory = fs.realpathSync(process.cwd());
 
 module.exports = {
   entry: './src/index.ts',
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: [".tsx", ".ts", ".js"]
   },
   output: {
     path: path.join(__dirname, '/dist'),
@@ -13,22 +15,21 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
-        loader: 'awesome-typescript-loader'
-      }
-    ]
-  },
+        {
+            test: /\.tsx?$/,
+            use: "ts-loader",
+            exclude: /node_modules/,
+        },
+    ],
+},
   plugins: [
     new HtmlWebpackPlugin({
-      template: './index.html'
+        inject: true,
+        template: path.resolve(appDirectory, "public/index.html"),
     }),
-    new CopyPlugin({
-      patterns: [
-        { from: 'scene', to: 'scene' }
-      ],
-    }),
-  ]
+    new CleanWebpackPlugin(),
+  ],
+  mode: "development",
 }
 
 

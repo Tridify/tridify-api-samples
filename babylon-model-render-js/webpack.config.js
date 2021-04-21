@@ -1,6 +1,8 @@
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
+const fs = require("fs");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const appDirectory = fs.realpathSync(process.cwd());
 
 module.exports = {
   entry: './src/index.js',
@@ -11,13 +13,21 @@ module.exports = {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.min.js'
   },
+  module: {
+    rules: [
+        {
+            test: /\.tsx?$/,
+            use: "ts-loader",
+            exclude: /node_modules/,
+        },
+    ],
+  },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './index.html'
+        inject: true,
+        template: path.resolve(appDirectory, "public/index.html"),
     }),
-    new CopyPlugin({patterns: [
-        { from: 'scene', to: 'scene' }
-      ],
-    }),
-  ]
+    new CleanWebpackPlugin(),
+  ],
+  mode: "development",
 }

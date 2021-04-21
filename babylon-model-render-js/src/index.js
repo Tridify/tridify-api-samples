@@ -1,36 +1,30 @@
-import {
-  Engine,
-  SceneLoader,
-} from '@babylonjs/core';
-import '@babylonjs/core/Cameras/arcRotateCamera';
-import '@babylonjs/core/scene';
-
-
+import "@babylonjs/core/Debug/debugLayer";
+import "@babylonjs/inspector";
+import "@babylonjs/loaders/glTF";
+import { Engine, Scene, ArcRotateCamera, TransformNode, Vector3, DirectionalLight } from "@babylonjs/core";
+  
 import * as Utilities from '@tridify/babylonjs-utilities';
 
-const run = async () => {
-
+  // Get canvas from index.html file
   const canvas = document.getElementById('renderCanvas');
 
   // Create engine
   const engine = new Engine(canvas, true, {
-    // Options
+      // Options
   });
 
-  // Minimal hash routing. Use the hash from conversion service to open different models.
-  const conversionID = document.location.hash ? window.location.hash.replace("#", "") : null;
+  // Create new Scene
+  const scene = new Scene(engine);
 
-  // Events
-  window.addEventListener('resize', () => engine.resize());
+  const createScene = async function () {
 
-  // Load Scene
-  await SceneLoader.LoadAsync('./scene/', 'scene.babylon', engine).then(async (scene) => {
+    // Minimal hash routing. Use the hash from conversion service to open different models.
+    const conversionID = document.location.hash ? window.location.hash.replace("#", "") : "";
 
-    // Load model
-    const hashes = await Utilities.loadModel(scene, conversionID);
-
-    // This load Ifc data of the model, you can also use it to get parts you like. loadIfc(conversionID, "decomposition")
-    const ifcData = await Utilities.loadIfc(hashes);
+    // Attach camera
+    const camera = Utilities.createOrbitCamera(scene);
+    scene.activeCamera = camera;
+    scene.activeCamera.attachControl(canvas, true);
 
     // Create environment
     scene.createDefaultEnvironment({
@@ -38,19 +32,26 @@ const run = async () => {
       createSkybox: false,
     })
 
-    // Attach camera
-    const camera = Utilities.createOrbitCamera(scene);
-    scene.activeCamera = camera;
-    scene.activeCamera.attachControl(canvas, true);
+    // Load Tridify model data by routing hash
+    const modelData = await Utilities.fetchSharedConversions(conversionID);
+
+    // Load Models from model data urls
+    const modelNode = await Utilities.loadMeshGltf(scene, modelData.PostProcessedFiles);
 
     // Frame scene so that models are properly in view
-    Utilities.frameScene(scene, camera);
+    Utilities.frameScene(scene, camera, modelNode.TransformNode.getChildMeshes());
+    
+    // Set default Lights to scene
+    const light = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 0), scene);
 
-    // Run render loop
+    // Start render loop for scene to update
     engine.runRenderLoop(() => {
       scene.render();
     });
-  });
-}
 
-run();
+    // Events
+    window.addEventListener('resize', () => engine.resize());
+  }
+
+  // Run scene creating function and loads model
+  createScene();
