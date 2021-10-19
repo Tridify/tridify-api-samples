@@ -3,6 +3,7 @@ const fs = require("fs");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const appDirectory = fs.realpathSync(process.cwd());
+const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.ts',
@@ -26,6 +27,12 @@ module.exports = {
     new HtmlWebpackPlugin({
         inject: true,
         template: path.resolve(appDirectory, "public/index.html"),
+    }),
+    new webpack.DefinePlugin({
+      "process.env": {
+        // This has effect on the react lib size
+        NODE_ENV: JSON.stringify("development"),
+      },
     }),
     new CleanWebpackPlugin(),
   ],
