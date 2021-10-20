@@ -1,9 +1,8 @@
-import "@babylonjs/core/Debug/debugLayer";
-import "@babylonjs/inspector";
-import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, TransformNode, Vector3, DirectionalLight } from "@babylonjs/core";
+import "@babylonjs/core/Debug/debugLayer"; // This is for babylon inspector (optional)
+import "@babylonjs/inspector"; // This is for babylon inspector (optional)
+import { Engine, Scene, ArcRotateCamera, Vector3, DirectionalLight } from "@babylonjs/core";
   
-import * as Utilities from '@tridify/babylonjs-utilities';
+import { GltfLoader, ApiClient, DTO, SceneUtilities } from '@tridify/viewer-core';
 
   // Get canvas from index.html file
   const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('renderCanvas');
@@ -22,7 +21,7 @@ import * as Utilities from '@tridify/babylonjs-utilities';
     const conversionID: string = document.location.hash ? window.location.hash.replace("#", "") : "";
 
     // Attach camera
-    const camera: ArcRotateCamera = Utilities.createOrbitCamera(scene);
+    const camera = new ArcRotateCamera('ArcRotateCamera', 0, -Math.PI / 2, 0, Vector3.Zero(), scene, true);
     scene.activeCamera = camera;
     scene.activeCamera.attachControl(canvas, true);
 
@@ -33,13 +32,13 @@ import * as Utilities from '@tridify/babylonjs-utilities';
     })
 
     // Load Tridify model data by routing hash
-    const modelData: SharedConversionsDTO = await Utilities.fetchSharedConversions(conversionID);
+    const modelData: DTO.PublishedLinkDTO | null = await ApiClient.getPublishedLink(conversionID).catch(() => null)
 
     // Load Models from model data urls
-    const modelNode: GltfModel = await Utilities.loadMeshGltf(scene, modelData.PostProcessedFiles);
+    const modelNode = await GltfLoader.loadGltfFiles(scene, modelData ? modelData.PostProcessedFiles : []);
 
-    // Frame scene so that models are properly in view
-    Utilities.frameScene(scene, camera, modelNode.TransformNode.getChildMeshes());
+    // Frame scene so that models are properly in view (optional)
+    SceneUtilities.frameScene(scene, camera, modelNode.getChildMeshes());
     
     // Set default Lights to scene
     const light = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 0), scene);
@@ -56,50 +55,3 @@ import * as Utilities from '@tridify/babylonjs-utilities';
   // Run scene creating function and loads model
   createScene();
 
-
-  //Model data interfaces
-  interface SharedConversionsDTO {
-    Conversions: SharedConversionDTO[];
-    Configuration: SharedConfigurationDTO;
-    LinkEnabled: boolean;
-    PostProcessState: string; // TODO: Change to enum
-    PostProcessedFiles: string[];
-  }
-  
-  interface SharedConversionDTO {
-    Hash: string;
-    Files: SharedConversionFileDTO[];
-    FileName: string;
-  }
-
-  interface SharedConfigurationDTO {
-    Tools: ToolsDTO;
-    PropertySetNames: string[];
-    QuantityNames: string[];
-  }
-
-  interface GltfModel {
-    TransformNode: TransformNode; // Node for all the merged meshes
-    ModelOffset: Vector3; //Model offset
-  }
-
-  interface ToolsDTO {
-    VRHeadsetMode: boolean;
-    ShareViewer: boolean;
-    MeasureTool: boolean;
-    BimTool: boolean;
-    CuttingPlanesTool: boolean;
-    WaypointTool: boolean;
-    CombinationVisibilityTool: boolean;
-    CommentingTool: boolean;
-  }
-  
-  interface SharedConversionFileDTO {
-    Url: string;
-    Type: string;   // It is ifc group
-    Format: string;
-    Storey: string;
-    overLay: boolean;
-    GUID: string;
-    FileName: string | undefined;  // undefined for old conversions
-  }
