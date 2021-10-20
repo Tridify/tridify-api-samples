@@ -32,7 +32,7 @@ import { GltfLoader, ApiClient, DTO, SceneUtilities } from '@tridify/viewer-core
     })
 
     // Load Tridify model data by routing hash
-    const modelData: DTO.PublishedLinkDTO | null = await ApiClient.getPublishedLink(conversionID).catch(x => x)
+    const modelData: DTO.PublishedLinkDTO | null = await ApiClient.getPublishedLink(conversionID).catch(() => null)
 
     // Load Models from model data urls
     const modelNode = await GltfLoader.loadGltfFiles(scene, modelData ? modelData.PostProcessedFiles : []);
