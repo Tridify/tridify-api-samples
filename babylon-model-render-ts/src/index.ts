@@ -1,8 +1,8 @@
-import "@babylonjs/core/Debug/debugLayer";
+import "@babylonjs/core/Debug/debugLayer"; // This is for babylon inspector (optional)
 import "@babylonjs/inspector"; // This is for babylon inspector (optional)
-import { Engine, Scene, ArcRotateCamera, TransformNode, Vector3, DirectionalLight } from "@babylonjs/core";
+import { Engine, Scene, ArcRotateCamera, Vector3, DirectionalLight } from "@babylonjs/core";
   
-import { GltfLoader, ApiClient, DTO } from '@tridify/viewer-core';
+import { GltfLoader, ApiClient, DTO, SceneUtilities } from '@tridify/viewer-core';
 
   // Get canvas from index.html file
   const canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('renderCanvas');
@@ -33,14 +33,12 @@ import { GltfLoader, ApiClient, DTO } from '@tridify/viewer-core';
 
     // Load Tridify model data by routing hash
     const modelData: DTO.PublishedLinkDTO | null = await ApiClient.getPublishedLink(conversionID).catch(x => x)
-    console.log(modelData)
 
     // Load Models from model data urls
     const modelNode = await GltfLoader.loadGltfFiles(scene, modelData ? modelData.PostProcessedFiles : []);
-    console.log(modelNode);
 
-    // Frame scene so that models are properly in view
-    //Utilities.frameScene(scene, camera, modelNode.TransformNode.getChildMeshes());
+    // Frame scene so that models are properly in view (optional)
+    SceneUtilities.frameScene(scene, camera, modelNode.getChildMeshes());
     
     // Set default Lights to scene
     const light = new DirectionalLight("DirectionalLight", new Vector3(0, -1, 0), scene);
