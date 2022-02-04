@@ -1,7 +1,7 @@
 {
   "name": "babylon-model-render-ts",
   "description": "Minimal TypeScript example showing Tridify conversion rendering with Babylon.js",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
@@ -22,6 +22,6 @@
   "dependencies": {
     "@babylonjs/core": "5.0.0-beta.5",
     "@babylonjs/inspector": "5.0.0-beta.5",
-    "@tridify/viewer-core": "1.0.6"
+    "@tridify/viewer-core": "2.0.1"
   }
 }
