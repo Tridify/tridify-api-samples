@@ -20,8 +20,8 @@
     "dotenv": "^9.0.2"
   },
   "dependencies": {
-    "@babylonjs/core": "^5.0.0-alpha.65",
-    "@babylonjs/inspector": "^5.0.0-alpha.65",
-    "@tridify/viewer-core": "^1.0.6"
+    "@babylonjs/core": "5.0.0-beta.5",
+    "@babylonjs/inspector": "5.0.0-beta.5",
+    "@tridify/viewer-core": "1.0.6"
   }
 }
